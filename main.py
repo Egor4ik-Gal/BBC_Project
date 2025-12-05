@@ -100,7 +100,9 @@ while running:
             # активация поля ввода имени
             if current_state == STATE_ENTER_NAME:
                 active_input = input_rect.collidepoint(event.pos)
-                if btn_start_game.is_clicked(event.pos):
+                current_player_name = name_text
+                if btn_start_game.is_clicked(event.pos) and current_player_name != "":
+                    print("Игрок:", current_player_name)
                     current_state = STATE_GAME
 
             elif current_state == STATE_GAME:
@@ -220,6 +222,6 @@ while running:
         screen.blit(title, (40, 80))
 
     pygame.display.update()
-    clock.tick(fps)
+    # clock.tick(fps)
 
 
