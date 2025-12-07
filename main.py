@@ -17,6 +17,13 @@ library_front = pygame.image.load("data/library_front.jpg")
 wardrobe = pygame.image.load("data/wardrobe.jpg")
 pygame.display.set_icon(icon)
 
+#индикаторы здоровья
+heart1 = pygame.image.load("data/characteristics/heart1.png")
+heart2 = pygame.image.load("data/characteristics/heart2.png")
+heart3 = pygame.image.load("data/characteristics/heart3.png")
+hp = 3
+total_hp = heart3
+
 clock = pygame.time.Clock()
 fps = 60
 
@@ -73,6 +80,12 @@ btn_main_hall = Button("Идти в главный зал", 170, 170, 300, 40)
 btn_misis_street_view = Button("Выйти на улицу", 170, 170, 300, 40)
 btn_wardrobe = Button("Пойти в гардероб", 170, 220, 300, 40)
 
+
+#кнопки для тестовой версии индикатора здоровья
+btn_hp_minus = Button("Уменьшить здоровье", 380, 310, 250, 40)
+btn_hp_plus = Button("Увеличить здоровье", 380, 260, 250, 40)
+
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -128,6 +141,24 @@ while running:
             elif current_state == STATE_LIBRARY_FRONT:
                 if btn_main_hall.is_clicked(event.pos):
                     current_state = STATE_MAIN_HALL
+
+                #Изменение здоровья тестовое
+                if btn_hp_minus.is_clicked(event.pos):
+                    if hp > 1:
+                        if (hp - 1) == 2:
+                            total_hp = heart2
+                            hp -= 1
+                        else:
+                            total_hp = heart1
+                            hp -= 1
+                if btn_hp_plus.is_clicked(event.pos):
+                    if hp < 3:
+                        if (hp + 1) == 3:
+                            total_hp = heart3
+                            hp += 1
+                        else:
+                            total_hp = heart2
+                            hp += 1
 
         # ввод текста имени
         if current_state == STATE_ENTER_NAME and event.type == pygame.KEYDOWN:
@@ -193,6 +224,7 @@ while running:
     #Игра началась
     elif current_state == STATE_STREET:
         screen.blit(misis_street_view, (0, 0))
+        screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
         btn_main_hall.draw(screen)
         title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
@@ -200,6 +232,7 @@ while running:
 
     elif current_state == STATE_MAIN_HALL:
         screen.blit(main_hall, (0, 0))
+        screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
         btn_library_front.draw(screen)
         btn_wardrobe.draw(screen)
@@ -209,6 +242,7 @@ while running:
 
     elif current_state == STATE_WARDROBE:
         screen.blit(wardrobe, (0, 0))
+        screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
         btn_main_hall.draw(screen)
         title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
@@ -216,8 +250,14 @@ while running:
 
     elif current_state == STATE_LIBRARY_FRONT:
         screen.blit(library_front, (0, 0))
+        screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
         btn_main_hall.draw(screen)
+
+        #кнопки для изменения hp
+        btn_hp_minus.draw(screen)
+        btn_hp_plus.draw(screen)
+
         title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
         screen.blit(title, (40, 80))
 
