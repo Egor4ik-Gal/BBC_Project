@@ -9,7 +9,7 @@ WIDTH, HEIGHT = 640, 360
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Жизнь студента")
 
-conn = sqlite3.connect("mydb.db")
+conn = sqlite3.connect("data/mydb.db")
 cur = conn.cursor()
 
 font = pygame.font.Font(None, 32)
@@ -179,7 +179,7 @@ while running:
                 active_input = input_rect.collidepoint(event.pos)
                 current_player_name = name_text
                 if btn_start_game.is_clicked(event.pos) and current_player_name != "":
-                    cur.execute(f"INSERT INTO baza (Name, curr_state) VALUES ({current_player_name, current_state})")
+                    cur.execute(f"INSERT INTO baza (Name, curr_state) VALUES ({current_player_name}, {current_state})")
                     conn.commit()
                     print("Игрок:", current_player_name)
                     current_state = STATE_GAME
