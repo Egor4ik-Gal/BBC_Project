@@ -1,5 +1,6 @@
 import pygame
 import random
+import sqlite3
 
 
 pygame.init()
@@ -7,6 +8,9 @@ pygame.init()
 WIDTH, HEIGHT = 640, 360
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Жизнь студента")
+
+conn = sqlite3.connect("mydb.db")
+cur = conn.cursor()
 
 font = pygame.font.Font(None, 32)
 
@@ -132,7 +136,7 @@ btn_cheat = Button("Попробовать списать", 170, 240, 300, 40)
 
 #лекция
 btn_skip_lecture = Button("Прогулять в библиотеке", 170, 140, 300, 40)
-btn_go_lecture = Button("Пойти не лекцию", 170, 190, 300, 40)
+btn_go_lecture = Button("Пойти на лекцию", 170, 190, 300, 40)
 
 #В библиотеке
 btn_library_learn = Button("Учиться", 170, 190, 300, 40)
@@ -175,6 +179,8 @@ while running:
                 active_input = input_rect.collidepoint(event.pos)
                 current_player_name = name_text
                 if btn_start_game.is_clicked(event.pos) and current_player_name != "":
+                    cur.execute(f"INSERT INTO baza (Name, curr_state) VALUES ({current_player_name, current_state})")
+                    conn.commit()
                     print("Игрок:", current_player_name)
                     current_state = STATE_GAME
 
@@ -268,44 +274,6 @@ while running:
                     current_state = state_library_phone
 
 
-            # elif current_state == STATE_STREET:
-            #     if btn_main_hall.is_clicked(event.pos):
-            #         current_state = STATE_MAIN_HALL
-            #
-            # elif current_state == STATE_MAIN_HALL:
-            #     if btn_wardrobe.is_clicked(event.pos):
-            #         current_state = STATE_WARDROBE
-            #     if btn_misis_street_view.is_clicked(event.pos):
-            #         current_state = STATE_STREET
-            #     if btn_library_front.is_clicked(event.pos):
-            #         current_state = STATE_LIBRARY_FRONT
-            #
-            # elif current_state == STATE_WARDROBE:
-            #     if btn_main_hall.is_clicked(event.pos):
-            #         current_state = STATE_MAIN_HALL
-            #
-            # elif current_state == STATE_LIBRARY_FRONT:
-            #     if btn_main_hall.is_clicked(event.pos):
-            #         current_state = STATE_MAIN_HALL
-            #
-            #     #Изменение здоровья тестовое
-            #     if btn_hp_minus.is_clicked(event.pos):
-            #         if hp > 1:
-            #             if (hp - 1) == 2:
-            #                 total_hp = heart2
-            #                 hp -= 1
-            #             else:
-            #                 total_hp = heart1
-            #                 hp -= 1
-            #     if btn_hp_plus.is_clicked(event.pos):
-            #         if hp < 3:
-            #             if (hp + 1) == 3:
-            #                 total_hp = heart3
-            #                 hp += 1
-            #             else:
-            #                 total_hp = heart2
-            #                 hp += 1
-
         # ввод текста имени
         if current_state == STATE_ENTER_NAME and event.type == pygame.KEYDOWN:
             if active_input:
@@ -366,47 +334,6 @@ while running:
         title = font.render("Привет, " + current_player_name + ", начинаем игру!", True, (255, 255, 0))
         screen.blit(title, (40, 80))
         btn_dalshe.draw(screen)
-
-    #Игра началась
-    # elif current_state == STATE_STREET:
-    #     screen.blit(misis_street_view, (0, 0))
-    #     screen.blit(total_hp, (190, 10))
-    #     btn_main_menu.draw(screen)
-    #     btn_main_hall.draw(screen)
-    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-    #     screen.blit(title, (40, 80))
-    #
-    # elif current_state == STATE_MAIN_HALL:
-    #     screen.blit(main_hall, (0, 0))
-    #     screen.blit(total_hp, (190, 10))
-    #     btn_main_menu.draw(screen)
-    #     btn_library_front.draw(screen)
-    #     btn_wardrobe.draw(screen)
-    #     btn_misis_street_view.draw(screen)
-    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-    #     screen.blit(title, (40, 80))
-    #
-    # elif current_state == STATE_WARDROBE:
-    #     screen.blit(wardrobe, (0, 0))
-    #     screen.blit(total_hp, (190, 10))
-    #     btn_main_menu.draw(screen)
-    #     btn_main_hall.draw(screen)
-    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-    #     screen.blit(title, (40, 80))
-    #
-    # elif current_state == STATE_LIBRARY_FRONT:
-    #     screen.blit(library_front, (0, 0))
-    #     screen.blit(total_hp, (190, 10))
-    #     btn_main_menu.draw(screen)
-    #     btn_main_hall.draw(screen)
-    #
-    #     #кнопки для изменения hp
-    #     btn_hp_minus.draw(screen)
-    #     btn_hp_plus.draw(screen)
-    #
-    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-    #     screen.blit(title, (40, 80))
-
 
     #Все для утра
     elif current_state == state_dormitory:
