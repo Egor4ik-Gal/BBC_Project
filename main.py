@@ -9,6 +9,7 @@ WIDTH, HEIGHT = 640, 360
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Жизнь студента")
 
+
 conn = sqlite3.connect("data/mydb.db")
 cur = conn.cursor()
 
@@ -24,6 +25,10 @@ dormitory = pygame.image.load("data/dormitory_test.jpg")
 laba = pygame.image.load("data/laba_test.jpg")
 lection = pygame.image.load("data/lection.jpg")
 lection2 = pygame.image.load("data/lection2.jpg")
+dormitory_night = pygame.image.load("data/dormitory_night.jpg")
+day_end = pygame.image.load("data/end_day.png")
+bad_end = pygame.image.load("data/bad_end.png")
+good_end = pygame.image.load("data/good_end.jpg")
 pygame.display.set_icon(icon)
 
 #индикаторы здоровья
@@ -60,9 +65,14 @@ state_first_class_good = 'first_class_good'
 state_first_class_bad = 'first_class_bad'
 state_second_class = 'second_class'
 state_second_class_end = 'second_class_end'
-state_evening = 'evening'
 state_night = 'night'
+state_evening = 'evening'
+state_evening_good = 'evening_good'
+state_evening_bad = 'evening_bad'
+state_night_end = 'night_end'
+state_day_end = 'day_end'
 state_start = 'start'
+state_final = 'final'
 
 
 
@@ -142,6 +152,14 @@ btn_go_lecture = Button("Пойти на лекцию", 170, 190, 300, 40)
 btn_library_learn = Button("Учиться", 170, 190, 300, 40)
 btn_library_phone = Button("Сидеть в телефоне", 170, 240, 300, 40)
 
+#Вечер
+btn_evening_learn = Button("Учиться", 170, 190, 300, 40)
+btn_evening_dota2 = Button("Играть в доту", 170, 240, 300, 40)
+
+#Ночь
+btn_night_sleep = Button("Спать", 170, 190, 300, 40)
+btn_night_learn = Button("Учиться", 170, 240, 300, 40)
+
 #Параметры
 learning = 0
 sleep_time = 1
@@ -179,7 +197,7 @@ while running:
                 active_input = input_rect.collidepoint(event.pos)
                 current_player_name = name_text
                 if btn_start_game.is_clicked(event.pos) and current_player_name != "":
-                    cur.execute(f"INSERT INTO baza (Name, curr_state) VALUES ({current_player_name}, {current_state})")
+                    cur.execute(f"INSERT INTO baza (Name, curr_state) VALUES ('{current_player_name}', '{current_state}')")
                     conn.commit()
                     print("Игрок:", current_player_name)
                     current_state = STATE_GAME
@@ -189,7 +207,7 @@ while running:
                     current_state = state_start
 
             if current_state == state_start:
-                if current_day < 10:
+                if current_day < 5:
                     current_state = state_dormitory
 
 
@@ -211,6 +229,18 @@ while running:
                     current_state = state_first_class
                 elif current_state == state_library_learn or current_state == state_second_class_end:
                     current_state = state_evening
+                elif current_state == state_library_phone:
+                    current_state = state_evening
+                elif current_state == state_evening_good or current_state == state_evening_bad:
+                    current_state = state_night
+                elif current_state == state_night_end:
+                    current_state = state_day_end
+                elif current_state == state_day_end:
+                    if current_day < 5:
+                        current_day += 1
+                        current_state = state_dormitory
+                    elif current_day == 5:
+                        current_state = state_final
 
 
             # События с утра
@@ -247,21 +277,27 @@ while running:
                 if btn_cheat.is_clicked(event.pos):
                     chance = random.randint(1,100)
                     if chance > 50:
+                        learning = 0
                         current_state = state_first_class_good
                     else:
+                        learning = 0
                         current_state = state_first_class_bad
                 elif btn_improvise.is_clicked(event.pos):
                     chance = random.randint(1,100)
                     if chance > 60:
+                        learning = 0
                         current_state = state_first_class_good
                     else:
+                        learning = 0
                         current_state = state_first_class_bad
                 elif btn_uchil.is_clicked(event.pos):
+                    learning = 0
                     current_state = state_first_class_good
 
             #события на второй паре
             if current_state == state_second_class:
                 if btn_skip_lecture.is_clicked(event.pos):
+                    skip_classes += 1
                     current_state = state_library
                 elif btn_go_lecture.is_clicked(event.pos):
                     current_state = state_second_class_end
@@ -272,6 +308,21 @@ while running:
                     current_state = state_library_learn
                 elif btn_library_phone.is_clicked(event.pos):
                     current_state = state_library_phone
+
+            # события вечером
+            if current_state == state_evening:
+                if btn_evening_learn.is_clicked(event.pos):
+                    learning += 1
+                    current_state = state_evening_good
+                elif btn_evening_dota2.is_clicked(event.pos):
+                    current_state = state_evening_bad
+
+            # события ночью
+            if current_state == state_night:
+                if btn_night_sleep.is_clicked(event.pos):
+                    current_state = state_day_end
+                elif btn_night_learn.is_clicked(event.pos):
+                    current_state = state_night_end
 
 
         # ввод текста имени
@@ -320,12 +371,14 @@ while running:
         screen.blit(title, (200, 60))
         # тут позже выведешь список из БД
 
-    # заглушка для "О нас"
+    # "О нас"
     elif current_state == STATE_ABOUT:
         btn_main_menu.draw(screen)
-        text = font.render("Экран 'О нас'", True, (255, 255, 0))
-        screen.blit(text, (230, 60))
-        # тут позже сделаешь описание проекта
+        text = font.render("Данную игру выполнили: Черняк Алексей, Галузо Егор", True, (255, 255, 0))
+        screen.blit(text, (20, 60))
+        text = font.render("Сугробов Александр, Яблоков Георгий", True, (255, 255, 0))
+        screen.blit(text, (20, 80))
+
 
     # экран после ввода имени(вступление)
     elif current_state == STATE_GAME:
@@ -514,6 +567,98 @@ while running:
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
+
+    elif current_state == state_evening:
+        screen.blit(dormitory_night, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Вот и наступил вечер.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Чем же заняться?", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        btn_evening_learn.draw(screen)
+        btn_evening_dota2.draw(screen)
+
+    elif current_state == state_evening_good:
+        screen.blit(dormitory_night, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Как же я устал.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Пора на боковую.", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_evening_bad:
+        screen.blit(dormitory_night, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Я отлично сыграл.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("0,15,2! Да я гений этой игры!", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+        text3 = font.render("Правда я мог немного подучить материал.", True, (255,255,0))
+        screen.blit(text3, (40, 120))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_night:
+        screen.blit(dormitory_night, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Время 23:00. Пора спать, но я мог бы доделать задания.", True, (255, 255, 0))
+        screen.blit(text1, (10, 80))
+
+        btn_night_learn.draw(screen)
+        btn_night_sleep.draw(screen)
+
+    elif current_state == state_night_end:
+        screen.blit(dormitory_night, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Я все доделал, но я не высплюсь сегодня нормально.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        #здесь изменить здоровье
+
+        btn_next.draw(screen)
+
+    elif current_state == state_day_end:
+        screen.blit(day_end, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Вот результаты твоего дня.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render(f"Ты учился сегодня {learning} раз", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+        text3 = font.render(f"Ты суммарно пропустил {skip_classes} пар", True, (255,255,0))
+        screen.blit(text3, (40, 120))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_final:
+        if skip_classes > 4:
+            screen.blit(day_end, (0, 0))
+            screen.blit(bad_end, (0,0))
+            btn_main_menu.draw(screen)
+
+            text1 = font.render("Ты не справился и тебя забирают в армию.", True, (255, 255, 0))
+            screen.blit(text1, (40, 80))
+        else:
+            screen.blit(good_end, (0, 0))
+            btn_main_menu.draw(screen)
+
+            text1 = font.render("Молодец ты успешно завершил семестр", True, (255, 255, 0))
+            screen.blit(text1, (40, 80))
+
 
 
 
