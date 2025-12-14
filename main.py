@@ -1,4 +1,5 @@
 import pygame
+import random
 
 
 pygame.init()
@@ -15,6 +16,10 @@ main_hall = pygame.image.load("data/main_hall.jpg")
 misis_street_view = pygame.image.load("data/misis_street_view.jpg")
 library_front = pygame.image.load("data/library_front.jpg")
 wardrobe = pygame.image.load("data/wardrobe.jpg")
+dormitory = pygame.image.load("data/dormitory_test.jpg")
+laba = pygame.image.load("data/laba_test.jpg")
+lection = pygame.image.load("data/lection.jpg")
+lection2 = pygame.image.load("data/lection2.jpg")
 pygame.display.set_icon(icon)
 
 #индикаторы здоровья
@@ -35,8 +40,32 @@ STATE_ABOUT = "about"
 STATE_GAME = "next"      # экран после ввода имени
 STATE_STREET = "street"
 STATE_MAIN_HALL = "main_hall"
-STATE_LIBRARY_FRONT = 'library_front'
 STATE_WARDROBE = 'wardrobe'
+state_library = 'library'
+state_library_learn = 'library_learn'
+state_library_phone = 'library_phone'
+state_dormitory = 'dormitory' #общага
+state_dormitory_morning_waking = 'dormitory_morning_waking'
+state_dormitory_morning_breakfast = 'dormitory_morning_breakfast'
+state_dormitory_morning_prospal = 'dormitory_morning_prospal'
+state_dormitory_morning_breakfast_good = 'dormitory_morning_breakfast_good'
+state_dormitory_morning_breakfast_bad = 'dormitory_morning_breakfast_bad'
+state_first_class = 'first_class'
+state_first_class_1 = 'first_class_1'
+state_first_class_good = 'first_class_good'
+state_first_class_bad = 'first_class_bad'
+state_second_class = 'second_class'
+state_second_class_end = 'second_class_end'
+state_evening = 'evening'
+state_night = 'night'
+state_start = 'start'
+
+
+
+time = ['morning', 'first class', 'second class', 'evening', 'night']
+current_day = 1
+current_time = 'morning'
+
 
 current_state = STATE_MENU
 current_player_name = ""
@@ -69,6 +98,8 @@ btn_dalshe = Button("Дальше", 430, 310, 200, 40)
 # кнопка, которая всегда ведёт в главное меню
 btn_main_menu = Button("Главное меню", 10, 10, 170, 40)
 
+btn_next = Button("->", 620, 340, 20, 20)
+
 # поле ввода имени
 input_rect = pygame.Rect(170, 150, 300, 40)
 active_input = False
@@ -84,6 +115,35 @@ btn_wardrobe = Button("Пойти в гардероб", 170, 220, 300, 40)
 #кнопки для тестовой версии индикатора здоровья
 btn_hp_minus = Button("Уменьшить здоровье", 380, 310, 250, 40)
 btn_hp_plus = Button("Увеличить здоровье", 380, 260, 250, 40)
+
+#waking up
+btn_sleep = Button("Полежать ещё 10 минут", 20, 190, 300, 40)
+btn_wakeup = Button("Встать, чтобы все успеть", 20, 140, 300, 40)
+
+#breakfast
+btn_healthy_food = Button("Приготовить что-нибудь", 320, 140, 300, 40)
+btn_fast_food = Button("Съесть доширак", 320, 190, 300, 40)
+btn_not_eat = Button("Не есть", 320, 240, 300, 40)
+
+#лаба
+btn_uchil = Button("Ответить на вопрос", 170, 140, 300, 40)
+btn_improvise = Button("Импровизировать", 170, 190, 300, 40)
+btn_cheat = Button("Попробовать списать", 170, 240, 300, 40)
+
+#лекция
+btn_skip_lecture = Button("Прогулять в библиотеке", 170, 140, 300, 40)
+btn_go_lecture = Button("Пойти не лекцию", 170, 190, 300, 40)
+
+#В библиотеке
+btn_library_learn = Button("Учиться", 170, 190, 300, 40)
+btn_library_phone = Button("Сидеть в телефоне", 170, 240, 300, 40)
+
+#Параметры
+learning = 0
+sleep_time = 1
+chance = random.randint(1,100)
+skip_classes = 0
+rezults = 0
 
 
 running = True
@@ -120,45 +180,131 @@ while running:
 
             elif current_state == STATE_GAME:
                 if btn_dalshe.is_clicked(event.pos):
-                    current_state = STATE_STREET
+                    current_state = state_start
 
-            elif current_state == STATE_STREET:
-                if btn_main_hall.is_clicked(event.pos):
-                    current_state = STATE_MAIN_HALL
+            if current_state == state_start:
+                if current_day < 10:
+                    current_state = state_dormitory
 
-            elif current_state == STATE_MAIN_HALL:
-                if btn_wardrobe.is_clicked(event.pos):
-                    current_state = STATE_WARDROBE
-                if btn_misis_street_view.is_clicked(event.pos):
-                    current_state = STATE_STREET
-                if btn_library_front.is_clicked(event.pos):
-                    current_state = STATE_LIBRARY_FRONT
 
-            elif current_state == STATE_WARDROBE:
-                if btn_main_hall.is_clicked(event.pos):
-                    current_state = STATE_MAIN_HALL
+            if btn_next.is_clicked(event.pos):
+                if current_state == state_dormitory:
+                    current_state = state_dormitory_morning_waking
+                elif current_state == state_dormitory_morning_prospal:
+                    skip_classes += 1
+                    current_state = state_second_class
+                elif current_state == state_dormitory_morning_breakfast_good:
+                    current_state = state_first_class
+                elif current_state == state_dormitory_morning_breakfast_bad:
+                    current_state = state_first_class
+                elif current_state == state_first_class:
+                    current_state = state_first_class_1
+                elif current_state == state_first_class_good or current_state == state_first_class_bad:
+                    current_state = state_second_class
+                elif current_state == state_dormitory_morning_breakfast_bad or current_state == state_dormitory_morning_breakfast_good:
+                    current_state = state_first_class
+                elif current_state == state_library_learn or current_state == state_second_class_end:
+                    current_state = state_evening
 
-            elif current_state == STATE_LIBRARY_FRONT:
-                if btn_main_hall.is_clicked(event.pos):
-                    current_state = STATE_MAIN_HALL
 
-                #Изменение здоровья тестовое
-                if btn_hp_minus.is_clicked(event.pos):
-                    if hp > 1:
-                        if (hp - 1) == 2:
-                            total_hp = heart2
-                            hp -= 1
-                        else:
-                            total_hp = heart1
-                            hp -= 1
-                if btn_hp_plus.is_clicked(event.pos):
-                    if hp < 3:
-                        if (hp + 1) == 3:
-                            total_hp = heart3
-                            hp += 1
-                        else:
-                            total_hp = heart2
-                            hp += 1
+            # События с утра
+            if current_state == state_dormitory_morning_waking:
+                if btn_sleep.is_clicked(event.pos):
+                    chance = random.randint(1,100)
+                    if chance >= 51:
+                        current_state = state_dormitory_morning_breakfast
+                    else:
+                        current_state = state_dormitory_morning_prospal
+                        skip_classes += 1
+                elif btn_wakeup.is_clicked(event.pos):
+                    current_state = state_dormitory_morning_breakfast
+
+            if current_state == state_dormitory_morning_breakfast:
+                if btn_healthy_food.is_clicked(event.pos):
+                    current_state = state_dormitory_morning_breakfast_good
+                elif btn_fast_food.is_clicked(event.pos):
+                    chance = random.randint(1,100)
+                    if chance >= 65:
+                        current_state = state_dormitory_morning_breakfast_good
+                    else:
+                        current_state = state_dormitory_morning_breakfast_bad
+                elif btn_not_eat.is_clicked(event.pos):
+                    chance = random.randint(1,100)
+                    if chance >= 50:
+                        current_state = state_dormitory_morning_breakfast_good
+                    else:
+                        current_state = state_dormitory_morning_breakfast_bad
+
+
+            #События на первой паре
+            if current_state == state_first_class_1:
+                if btn_cheat.is_clicked(event.pos):
+                    chance = random.randint(1,100)
+                    if chance > 50:
+                        current_state = state_first_class_good
+                    else:
+                        current_state = state_first_class_bad
+                elif btn_improvise.is_clicked(event.pos):
+                    chance = random.randint(1,100)
+                    if chance > 60:
+                        current_state = state_first_class_good
+                    else:
+                        current_state = state_first_class_bad
+                elif btn_uchil.is_clicked(event.pos):
+                    current_state = state_first_class_good
+
+            #события на второй паре
+            if current_state == state_second_class:
+                if btn_skip_lecture.is_clicked(event.pos):
+                    current_state = state_library
+                elif btn_go_lecture.is_clicked(event.pos):
+                    current_state = state_second_class_end
+
+            if current_state == state_library:
+                if btn_library_learn.is_clicked(event.pos):
+                    learning += 1
+                    current_state = state_library_learn
+                elif btn_library_phone.is_clicked(event.pos):
+                    current_state = state_library_phone
+
+
+            # elif current_state == STATE_STREET:
+            #     if btn_main_hall.is_clicked(event.pos):
+            #         current_state = STATE_MAIN_HALL
+            #
+            # elif current_state == STATE_MAIN_HALL:
+            #     if btn_wardrobe.is_clicked(event.pos):
+            #         current_state = STATE_WARDROBE
+            #     if btn_misis_street_view.is_clicked(event.pos):
+            #         current_state = STATE_STREET
+            #     if btn_library_front.is_clicked(event.pos):
+            #         current_state = STATE_LIBRARY_FRONT
+            #
+            # elif current_state == STATE_WARDROBE:
+            #     if btn_main_hall.is_clicked(event.pos):
+            #         current_state = STATE_MAIN_HALL
+            #
+            # elif current_state == STATE_LIBRARY_FRONT:
+            #     if btn_main_hall.is_clicked(event.pos):
+            #         current_state = STATE_MAIN_HALL
+            #
+            #     #Изменение здоровья тестовое
+            #     if btn_hp_minus.is_clicked(event.pos):
+            #         if hp > 1:
+            #             if (hp - 1) == 2:
+            #                 total_hp = heart2
+            #                 hp -= 1
+            #             else:
+            #                 total_hp = heart1
+            #                 hp -= 1
+            #     if btn_hp_plus.is_clicked(event.pos):
+            #         if hp < 3:
+            #             if (hp + 1) == 3:
+            #                 total_hp = heart3
+            #                 hp += 1
+            #             else:
+            #                 total_hp = heart2
+            #                 hp += 1
 
         # ввод текста имени
         if current_state == STATE_ENTER_NAME and event.type == pygame.KEYDOWN:
@@ -222,46 +368,228 @@ while running:
         btn_dalshe.draw(screen)
 
     #Игра началась
-    elif current_state == STATE_STREET:
-        screen.blit(misis_street_view, (0, 0))
+    # elif current_state == STATE_STREET:
+    #     screen.blit(misis_street_view, (0, 0))
+    #     screen.blit(total_hp, (190, 10))
+    #     btn_main_menu.draw(screen)
+    #     btn_main_hall.draw(screen)
+    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
+    #     screen.blit(title, (40, 80))
+    #
+    # elif current_state == STATE_MAIN_HALL:
+    #     screen.blit(main_hall, (0, 0))
+    #     screen.blit(total_hp, (190, 10))
+    #     btn_main_menu.draw(screen)
+    #     btn_library_front.draw(screen)
+    #     btn_wardrobe.draw(screen)
+    #     btn_misis_street_view.draw(screen)
+    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
+    #     screen.blit(title, (40, 80))
+    #
+    # elif current_state == STATE_WARDROBE:
+    #     screen.blit(wardrobe, (0, 0))
+    #     screen.blit(total_hp, (190, 10))
+    #     btn_main_menu.draw(screen)
+    #     btn_main_hall.draw(screen)
+    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
+    #     screen.blit(title, (40, 80))
+    #
+    # elif current_state == STATE_LIBRARY_FRONT:
+    #     screen.blit(library_front, (0, 0))
+    #     screen.blit(total_hp, (190, 10))
+    #     btn_main_menu.draw(screen)
+    #     btn_main_hall.draw(screen)
+    #
+    #     #кнопки для изменения hp
+    #     btn_hp_minus.draw(screen)
+    #     btn_hp_plus.draw(screen)
+    #
+    #     title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
+    #     screen.blit(title, (40, 80))
+
+
+    #Все для утра
+    elif current_state == state_dormitory:
+        screen.blit(dormitory, (0, 0))
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
-        btn_main_hall.draw(screen)
-        title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-        screen.blit(title, (40, 80))
 
-    elif current_state == STATE_MAIN_HALL:
-        screen.blit(main_hall, (0, 0))
+        text1 = font.render("Комната в общаге. За окном серое утро.", True, (255, 255, 0))
+        text2 = font.render("Будильник орёт уже вторую минуту.", True, (255,255,0))
+        screen.blit(text1, (40, 80))
+        screen.blit(text2, (40, 100))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_dormitory_morning_waking:
+        screen.blit(dormitory, (0, 0))
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
-        btn_library_front.draw(screen)
-        btn_wardrobe.draw(screen)
-        btn_misis_street_view.draw(screen)
-        title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-        screen.blit(title, (40, 80))
 
-    elif current_state == STATE_WARDROBE:
-        screen.blit(wardrobe, (0, 0))
+        text1 = font.render("Пора вставать на пары! Что же я выберу?", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_sleep.draw(screen)
+        btn_wakeup.draw(screen)
+
+    elif current_state == state_dormitory_morning_prospal:
+        screen.blit(dormitory, (0, 0))
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
-        btn_main_hall.draw(screen)
-        title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-        screen.blit(title, (40, 80))
 
-    elif current_state == STATE_LIBRARY_FRONT:
+        text1 = font.render("Я проспал! Похоже получаю пропуск за первую пару.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_dormitory_morning_breakfast:
+        screen.blit(dormitory, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Я встал вовремя. Можно позавтракать.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Что я буду есть?", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        btn_healthy_food.draw(screen)
+        btn_fast_food.draw(screen)
+        btn_not_eat.draw(screen)
+
+    elif current_state == state_dormitory_morning_breakfast_good:
+        screen.blit(dormitory, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Я хорошо поел.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Пора идти на пары.", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_dormitory_morning_breakfast_bad:
+        screen.blit(dormitory, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Стоило поесть полезной еды.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        #Вот здесь реализовать уменьшение здоровья
+
+        btn_next.draw(screen)
+
+    #Все для первой пары
+    elif current_state == state_first_class:
+        screen.blit(laba, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Первой парой лабораторная работа по вычмашу.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_first_class_1:
+        screen.blit(laba, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Преподаватель:", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Отвечай на вопросы.", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        if learning >= 1:
+            btn_uchil.draw(screen)
+        else:
+            btn_cheat.draw(screen)
+            btn_improvise.draw(screen)
+
+    elif current_state == state_first_class_good:
+        screen.blit(laba, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Фух! Сдал!", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Что там дальше?", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        #нужно будет поменять значение переменной rezults
+
+
+        btn_next.draw(screen)
+
+    elif current_state == state_first_class_bad:
+        screen.blit(laba, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Эх, не повезло!", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        #нужно будет поменять значение переменной rezults
+
+        btn_next.draw(screen)
+
+    elif current_state == state_second_class:
+        screen.blit(lection, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Сейчас у меня лекция по математике.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+        text2 = font.render("Что же выбрать?", True, (255, 255, 0))
+        screen.blit(text2, (40, 100))
+
+        btn_go_lecture.draw(screen)
+        btn_skip_lecture.draw(screen)
+
+    elif current_state == state_second_class_end:
+        screen.blit(lection, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Вот и закончилась пара.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_library:
         screen.blit(library_front, (0, 0))
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
-        btn_main_hall.draw(screen)
 
-        #кнопки для изменения hp
-        btn_hp_minus.draw(screen)
-        btn_hp_plus.draw(screen)
+        text1 = font.render("Что я буду делать в библиотеке.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
 
-        title = font.render("Куда ты хочешь пойти?", True, (255, 255, 0))
-        screen.blit(title, (40, 80))
+        btn_library_learn.draw(screen)
+        btn_library_phone.draw(screen)
+
+    elif current_state == state_library_learn:
+        screen.blit(library_front, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Я отлично поработал.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_next.draw(screen)
+
+    elif current_state == state_library_phone:
+        screen.blit(library_front, (0, 0))
+        screen.blit(total_hp, (190, 10))
+        btn_main_menu.draw(screen)
+
+        text1 = font.render("Возможно стоило учиться.", True, (255, 255, 0))
+        screen.blit(text1, (40, 80))
+
+        btn_next.draw(screen)
+
+
 
     pygame.display.update()
-    # clock.tick(fps)
-
+    clock.tick(fps)
 
