@@ -179,7 +179,7 @@ while running:
         if message_timer == 0:
             message = ""
     
-    screen.fill((255, 255, 255))  # Светло-серый фон
+    screen.fill((0, 0, 0))  # Светло-серый фон
     
     draw_circles()
     draw_sectors()
