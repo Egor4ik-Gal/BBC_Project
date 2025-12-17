@@ -129,17 +129,6 @@ def is_ball_in_sector():
 
 def draw_ui():
     """Рисует интерфейс"""
-    pass
-    
-
-    
-
-    
-    status_color = GREEN if is_ball_in_sector() else RED
-    status_text = "В СЕКТОРЕ" if is_ball_in_sector() else "НЕ В СЕКТОРЕ"
-    status = small_font.render(status_text, True, status_color)
-    screen.blit(status, (W - 150, 50))
-    
     if message and message_timer > 0:
         color = GREEN if "УСПЕХ" in message else RED
         text = font.render(message, True, color)
