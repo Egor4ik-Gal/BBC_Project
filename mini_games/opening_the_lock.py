@@ -133,9 +133,7 @@ def draw_ui():
     
 
     
-    ugol_deg = math.degrees(ball_ugol) % 360
-    ugol_text = small_font.render(f"Угол: {ugol_deg:.1f}°", True, BLUE)
-    screen.blit(ugol_text, (W - 150, 20))
+
     
     status_color = GREEN if is_ball_in_sector() else RED
     status_text = "В СЕКТОРЕ" if is_ball_in_sector() else "НЕ В СЕКТОРЕ"
