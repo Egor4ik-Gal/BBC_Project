@@ -129,16 +129,9 @@ def is_ball_in_sector():
 
 def draw_ui():
     """Рисует интерфейс"""
-    instructions = [
-        "Управление:",
-        "R - новая игра",
-        "ПРОБЕЛ - попытка",
-        "ESC - выход"
-    ]
+    pass
     
-    for i, line in enumerate(instructions):
-        text = small_font.render(line, True, DARK_GRAY)
-        screen.blit(text, (20, 20 + i * 25))
+
     
     ugol_deg = math.degrees(ball_ugol) % 360
     ugol_text = small_font.render(f"Угол: {ugol_deg:.1f}°", True, BLUE)
