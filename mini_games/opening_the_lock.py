@@ -5,7 +5,7 @@ import random
 
 pygame.init()
 
-W, H = 800, 600
+W, H = 640, 360
 screen = pygame.display.set_mode((W, H))
 pygame.display.set_caption("Замок с секретами")
 
