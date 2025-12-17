@@ -14,7 +14,6 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 100, 255)
-DARK_GRAY = (50, 50, 50)
 
 CENTER = (W // 2, H // 2)
 INNER_RADIUS = 100
@@ -75,8 +74,8 @@ def draw_circles():
     pygame.draw.circle(screen, WHITE, CENTER, OUTER_RADIUS)
     pygame.draw.circle(screen, BLACK, CENTER, INNER_RADIUS)
     
-    pygame.draw.circle(screen, DARK_GRAY, CENTER, INNER_RADIUS, 3)
-    pygame.draw.circle(screen, DARK_GRAY, CENTER, OUTER_RADIUS, 3)
+    pygame.draw.circle(screen, BLACK, CENTER, INNER_RADIUS, 3)
+    pygame.draw.circle(screen, BLACK, CENTER, OUTER_RADIUS, 3)
 
 def draw_sectors():
     """Рисует зеленые сектора"""
