@@ -17,7 +17,7 @@ BLUE = (0, 100, 255)
 
 CENTER = (W // 2, H // 2)
 INNER_RADIUS = 100
-OUTER_RADIUS = 200
+OUTER_RADIUS = 150
 
 ball_radius = 10
 ball_ugol = 0
