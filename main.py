@@ -2,13 +2,11 @@ import pygame
 import random
 import sqlite3
 
-
 pygame.init()
 
 WIDTH, HEIGHT = 640, 360
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Жизнь студента")
-
 
 conn = sqlite3.connect("data/mydb.db")
 cur = conn.cursor()
@@ -74,12 +72,9 @@ state_day_end = 'day_end'
 state_start = 'start'
 state_final = 'final'
 
-
-
 time = ['morning', 'first class', 'second class', 'evening', 'night']
 current_day = 1
 current_time = 'morning'
-
 
 current_state = STATE_MENU
 current_player_name = ""
@@ -125,7 +120,6 @@ btn_main_hall = Button("Идти в главный зал", 170, 170, 300, 40)
 btn_misis_street_view = Button("Выйти на улицу", 170, 170, 300, 40)
 btn_wardrobe = Button("Пойти в гардероб", 170, 220, 300, 40)
 
-
 #кнопки для тестовой версии индикатора здоровья
 btn_hp_minus = Button("Уменьшить здоровье", 380, 310, 250, 40)
 btn_hp_plus = Button("Увеличить здоровье", 380, 260, 250, 40)
@@ -166,7 +160,6 @@ sleep_time = 1
 chance = random.randint(1,100)
 skip_classes = 0
 rezults = 0
-
 
 running = True
 while running:
@@ -210,7 +203,6 @@ while running:
                 if current_day < 5:
                     current_state = state_dormitory
 
-
             if btn_next.is_clicked(event.pos):
                 if current_state == state_dormitory:
                     current_state = state_dormitory_morning_waking
@@ -242,7 +234,6 @@ while running:
                     elif current_day == 5:
                         current_state = state_final
 
-
             # События с утра
             if current_state == state_dormitory_morning_waking:
                 if btn_sleep.is_clicked(event.pos):
@@ -270,7 +261,6 @@ while running:
                         current_state = state_dormitory_morning_breakfast_good
                     else:
                         current_state = state_dormitory_morning_breakfast_bad
-
 
             #События на первой паре
             if current_state == state_first_class_1:
@@ -324,7 +314,6 @@ while running:
                 elif btn_night_learn.is_clicked(event.pos):
                     current_state = state_night_end
 
-
         # ввод текста имени
         if current_state == STATE_ENTER_NAME and event.type == pygame.KEYDOWN:
             if active_input:
@@ -367,24 +356,23 @@ while running:
     # заглушка для таблицы лидеров
     elif current_state == STATE_LEADERS:
         btn_main_menu.draw(screen)
-        title = font.render("Таблица лидеров", True, (255, 255, 0))
+        title = font.render("Таблица лидеров", True, (255, 255, 255))
         screen.blit(title, (200, 60))
         # тут позже выведешь список из БД
 
     # "О нас"
     elif current_state == STATE_ABOUT:
         btn_main_menu.draw(screen)
-        text = font.render("Данную игру выполнили: Черняк Алексей, Галузо Егор", True, (255, 255, 0))
+        text = font.render("Данную игру выполнили: Черняк Алексей, Галузо Егор", True, (255, 255, 255))
         screen.blit(text, (20, 60))
-        text = font.render("Сугробов Александр, Яблоков Георгий", True, (255, 255, 0))
+        text = font.render("Сугробов Александр, Яблоков Георгий", True, (255, 255, 255))
         screen.blit(text, (20, 80))
-
 
     # экран после ввода имени(вступление)
     elif current_state == STATE_GAME:
         screen.blit(misis_street_view, (0, 0))
         btn_main_menu.draw(screen)
-        title = font.render("Привет, " + current_player_name + ", начинаем игру!", True, (255, 255, 0))
+        title = font.render("Привет, " + current_player_name + ", начинаем игру!", True, (255, 255, 255))
         screen.blit(title, (40, 80))
         btn_dalshe.draw(screen)
 
@@ -394,8 +382,8 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Комната в общаге. За окном серое утро.", True, (255, 255, 0))
-        text2 = font.render("Будильник орёт уже вторую минуту.", True, (255,255,0))
+        text1 = font.render("Комната в общаге. За окном серое утро.", True, (255, 255, 255))
+        text2 = font.render("Будильник орёт уже вторую минуту.", True, (255,255,255))
         screen.blit(text1, (40, 80))
         screen.blit(text2, (40, 100))
 
@@ -406,7 +394,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Пора вставать на пары! Что же я выберу?", True, (255, 255, 0))
+        text1 = font.render("Пора вставать на пары! Что же я выберу?", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_sleep.draw(screen)
@@ -417,7 +405,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я проспал! Похоже получаю пропуск за первую пару.", True, (255, 255, 0))
+        text1 = font.render("Я проспал! Похоже получаю пропуск за первую пару.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
@@ -427,9 +415,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я встал вовремя. Можно позавтракать.", True, (255, 255, 0))
+        text1 = font.render("Я встал вовремя. Можно позавтракать.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Что я буду есть?", True, (255, 255, 0))
+        text2 = font.render("Что я буду есть?", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         btn_healthy_food.draw(screen)
@@ -441,9 +429,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я хорошо поел.", True, (255, 255, 0))
+        text1 = font.render("Я хорошо поел.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Пора идти на пары.", True, (255, 255, 0))
+        text2 = font.render("Пора идти на пары.", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         btn_next.draw(screen)
@@ -453,7 +441,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Стоило поесть полезной еды.", True, (255, 255, 0))
+        text1 = font.render("Стоило поесть полезной еды.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         #Вот здесь реализовать уменьшение здоровья
@@ -466,7 +454,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Первой парой лабораторная работа по вычмашу.", True, (255, 255, 0))
+        text1 = font.render("Первой парой лабораторная работа по вычмашу.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
@@ -476,9 +464,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Преподаватель:", True, (255, 255, 0))
+        text1 = font.render("Преподаватель:", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Отвечай на вопросы.", True, (255, 255, 0))
+        text2 = font.render("Отвечай на вопросы.", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         if learning >= 1:
@@ -492,13 +480,12 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Фух! Сдал!", True, (255, 255, 0))
+        text1 = font.render("Фух! Сдал!", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Что там дальше?", True, (255, 255, 0))
+        text2 = font.render("Что там дальше?", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         #нужно будет поменять значение переменной rezults
-
 
         btn_next.draw(screen)
 
@@ -507,7 +494,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Эх, не повезло!", True, (255, 255, 0))
+        text1 = font.render("Эх, не повезло!", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         #нужно будет поменять значение переменной rezults
@@ -519,9 +506,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Сейчас у меня лекция по математике.", True, (255, 255, 0))
+        text1 = font.render("Сейчас у меня лекция по математике.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Что же выбрать?", True, (255, 255, 0))
+        text2 = font.render("Что же выбрать?", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         btn_go_lecture.draw(screen)
@@ -532,7 +519,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Вот и закончилась пара.", True, (255, 255, 0))
+        text1 = font.render("Вот и закончилась пара.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
@@ -542,7 +529,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Что я буду делать в библиотеке.", True, (255, 255, 0))
+        text1 = font.render("Что я буду делать в библиотеке.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_library_learn.draw(screen)
@@ -553,7 +540,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я отлично поработал.", True, (255, 255, 0))
+        text1 = font.render("Я отлично поработал.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
@@ -563,7 +550,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Возможно стоило учиться.", True, (255, 255, 0))
+        text1 = font.render("Возможно стоило учиться.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         btn_next.draw(screen)
@@ -573,9 +560,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Вот и наступил вечер.", True, (255, 255, 0))
+        text1 = font.render("Вот и наступил вечер.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Чем же заняться?", True, (255, 255, 0))
+        text2 = font.render("Чем же заняться?", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         btn_evening_learn.draw(screen)
@@ -586,9 +573,9 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Как же я устал.", True, (255, 255, 0))
+        text1 = font.render("Как же я устал.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("Пора на боковую.", True, (255, 255, 0))
+        text2 = font.render("Пора на боковую.", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
 
         btn_next.draw(screen)
@@ -598,11 +585,11 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я отлично сыграл.", True, (255, 255, 0))
+        text1 = font.render("Я отлично сыграл.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
-        text2 = font.render("0,15,2! Да я гений этой игры!", True, (255, 255, 0))
+        text2 = font.render("0,15,2! Да я гений этой игры!", True, (255, 255, 255))
         screen.blit(text2, (40, 100))
-        text3 = font.render("Правда я мог немного подучить материал.", True, (255,255,0))
+        text3 = font.render("Правда я мог немного подучить материал.", True, (255,255,255))
         screen.blit(text3, (40, 120))
 
         btn_next.draw(screen)
@@ -612,7 +599,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Время 23:00. Пора спать, но я мог бы доделать задания.", True, (255, 255, 0))
+        text1 = font.render("Время 23:00. Пора спать, но я мог бы доделать задания.", True, (255, 255, 255))
         screen.blit(text1, (10, 80))
 
         btn_night_learn.draw(screen)
@@ -623,7 +610,7 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Я все доделал, но я не высплюсь сегодня нормально.", True, (255, 255, 0))
+        text1 = font.render("Я все доделал, но я не высплюсь сегодня нормально.", True, (255, 255, 255))
         screen.blit(text1, (40, 80))
 
         #здесь изменить здоровье
@@ -635,11 +622,11 @@ while running:
         screen.blit(total_hp, (190, 10))
         btn_main_menu.draw(screen)
 
-        text1 = font.render("Вот результаты твоего дня.", True, (255, 255, 0))
+        text1 = font.render("Вот результаты твоего дня.", True, (0, 0, 0))
         screen.blit(text1, (40, 80))
-        text2 = font.render(f"Ты учился сегодня {learning} раз", True, (255, 255, 0))
+        text2 = font.render(f"Ты учился сегодня {learning} раз", True, (0, 0, 0))
         screen.blit(text2, (40, 100))
-        text3 = font.render(f"Ты суммарно пропустил {skip_classes} пар", True, (255,255,0))
+        text3 = font.render(f"Ты суммарно пропустил {skip_classes} пар", True, (0,0,0))
         screen.blit(text3, (40, 120))
 
         btn_next.draw(screen)
@@ -650,18 +637,17 @@ while running:
             screen.blit(bad_end, (0,0))
             btn_main_menu.draw(screen)
 
-            text1 = font.render("Ты не справился и тебя забирают в армию.", True, (255, 255, 0))
+            text1 = font.render("Ты не справился и тебя забирают в армию.", True, (255, 255, 255))
             screen.blit(text1, (40, 80))
         else:
             screen.blit(good_end, (0, 0))
             btn_main_menu.draw(screen)
 
-            text1 = font.render("Молодец ты успешно завершил семестр", True, (255, 255, 0))
+            text1 = font.render("Молодец ты успешно завершил семестр", True, (255, 255, 255))
             screen.blit(text1, (40, 80))
-
-
-
 
     pygame.display.update()
     clock.tick(fps)
 
+conn.close()
+pygame.quit()
